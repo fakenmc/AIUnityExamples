@@ -12,35 +12,25 @@ public class DisruptiveBehaviour : SteeringBehaviour
     [Tooltip("Interval between switching disruption forces")]
     private float switchInterval = 0.25f;
 
-    [Header("Angular acceleration disruption")]
-
-    [SerializeField]
-    [Tooltip("L value of logistic function: max magnitude")]
-    private float angAcellL = 90f;
-
-    [SerializeField]
-    [Tooltip("X0 value of logistic function: half-speed for disruption")]
-    private float angAcellX0 = 140;
-
-    [SerializeField]
-    [Range(-1, 1)]
-    [Tooltip("k value of logistic function: disruption steepness")]
-    private float angAcellK = 0.04f;
-
     [Header("Linear acceleration disruption")]
 
     [SerializeField]
-    [Tooltip("L value of logistic function: max magnitude")]
-    private float linAcellL = 90f;
+    [Tooltip("Linear speed value when disruption starts")]
+    private float linX0 = 50f;
 
     [SerializeField]
-    [Tooltip("X0 value of logistic function: half-speed for disruption")]
-    private float linAcellX0 = 140;
+    [Tooltip("Slope of increasing disruption")]
+    private float linM = 1;
+
+    [Header("Angular acceleration disruption")]
 
     [SerializeField]
-    [Range(-1, 1)]
-    [Tooltip("k value of logistic function: disruption steepness")]
-    private float linAcellK = 0.04f;
+    [Tooltip("Angular rotation value when disruption starts")]
+    private float angX0 = 90f;
+
+    [SerializeField]
+    [Tooltip("Slope of increasing disruption")]
+    private float angM = 1;
 
     // Last disruption
     private SteeringOutput lastDisruption;
@@ -60,10 +50,11 @@ public class DisruptiveBehaviour : SteeringBehaviour
         // Is it time to create a new disruption?
         if (Time.time > lastDisruptionTime + switchInterval)
         {
+            // Determine disruptions based on current speed and acceleration
             Vector2 linear = Random.onUnitSphere *
-                Logistic(Velocity.magnitude, linAcellL, linAcellX0, linAcellK);
-            float angular =
-                Logistic(AngularVelocity, angAcellL, angAcellX0, angAcellK);
+                Linear(Mathf.Pow(MaxSpeed + MaxAccel, 2), linX0, linM);
+            float angular = Random.value *
+                Linear(Mathf.Pow(MaxRotation + MaxAngularAccel, 2), angX0, angM);
             lastDisruption = new SteeringOutput(linear, angular);
             lastDisruptionTime = Time.time;
         }
@@ -73,16 +64,15 @@ public class DisruptiveBehaviour : SteeringBehaviour
     }
 
     /// <summary>
-    /// Logistic function.
+    /// Linear function.
     /// </summary>
     /// <param name="x">Input variable x</param>
-    /// <param name="L">The curve's maximum value</param>
-    /// <param name="x0">The x-value of the sigmoid's midpoint</param>
-    /// <param name="k">The steepness of the curve</param>
+    /// <param name="x0">x value when disruption starts</param>
+    /// <param name="m">The slope</param>
     /// <returns>The y output variable</returns>
-    public static float Logistic(float x, float L, float x0, float k)
+    public static float Linear(float x, float x0, float m)
     {
-        return L / (1 + Mathf.Exp(-k * (x - x0)));
+        return x < x0 ? 0 : m * (x - x0);
     }
 
     // Draw a line showing the linear disruption caused by this behaviour.

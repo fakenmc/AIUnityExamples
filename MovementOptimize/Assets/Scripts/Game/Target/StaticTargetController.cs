@@ -61,7 +61,7 @@ public class StaticTargetController : MonoBehaviour
 
         // Determine points for this destruction based on how well the
         // destroyer was facing the target
-        float points = 1 - 0.9f * Mathf.Abs(angleDiff) / 180;
+        float points = Mathf.Pow(1 - 0.9f * Mathf.Abs(angleDiff) / 180, 5);
         UpdatePoints(points);
         Invoke("SpawnTarget", delay);
     }

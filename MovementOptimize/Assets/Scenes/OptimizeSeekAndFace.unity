@@ -331,10 +331,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15c7658a3fc540e4687505b505fbd30f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAccel: 10
-  maxSpeed: 10
-  maxAngularAccel: 360
-  maxRotation: 90
+  maxAccel: 50
+  maxSpeed: 18
+  maxAngularAccel: 120
+  maxRotation: 60
   targetTag: Target
 --- !u!58 &898528544
 CircleCollider2D:
@@ -448,14 +448,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebf1c6b0842a3d72181037f125f20467, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weight: 1
+  weight: 2
   switchInterval: 0.25
-  angAcellL: 90
-  angAcellX0: 140
-  angAcellK: 0.04
-  linAcellL: 90
-  linAcellX0: 140
-  linAcellK: 0.04
+  linX0: 60
+  linM: 0.5
+  angX0: 180
+  angM: 0.5
 --- !u!1 &1106298839
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,8 +579,8 @@ MonoBehaviour:
   optimize: 1
   timeScale: 100
   evalsPerSolution: 3
-  maxSteps: 200
-  numRuns: 1
+  maxSteps: 50
+  numRuns: 3
   showGame: 0
 --- !u!4 &1150418082
 Transform:

@@ -122,27 +122,27 @@ public class Optimizer : MonoBehaviour
                 s => { solutionsQueue.Add(s); return evaluationsQueue.Take(); },
                 // Solution domain
                 new (float, float)[]
-                    { (0, 10000), (0, 10000), (0, 10000), (0, 10000) },
+                    { (0, 1000), (0, 1000), (0, 1000), (0, 1000) },
                 // We want to maximize
                 minimize : false,
                 maxSteps : maxSteps,
                 criteria : 120,
-                initialSolution : () => new float[] {
-                    (float)(threadRnd.NextDouble() * 50),
-                    (float)(threadRnd.NextDouble() * 50),
-                    (float)(threadRnd.NextDouble() * 100),
-                    (float)(threadRnd.NextDouble() * 100) },
-                deltas :  new float[] { 20, 20, 20, 20 },
-                minDeltas : new float[] { 1.5f, 1.5f, 1.5f, 1.5f },
+                // initialSolution : () => new float[] {
+                //     (float)(threadRnd.NextDouble() * 50),
+                //     (float)(threadRnd.NextDouble() * 50),
+                //     (float)(threadRnd.NextDouble() * 100),
+                //     (float)(threadRnd.NextDouble() * 100) },
+                deltas :  new float[] { 100, 100, 100, 100 },
+                // minDeltas : new float[] { 1.5f, 1.5f, 1.5f, 1.5f },
                 runs : numRuns,
                 evalsPerSolution : evalsPerSolution,
-                t0 : 5,       // Initial temperature
+                t0 : 0,       // Initial temperature
                 r : 0.1f,     // Temperature decrease coefficient
                 accel : 1.2f // Acceleration coefficient
             );
 
             // Register listener
-            hc.BestInRunUpdate += (step, sol, eval, numEvals) =>
+            hc.PerStep += (step, sol, eval, numEvals) =>
                 msgQueue.Add(
                     string.Format("Step {0} with fit = {1} ({2})",
                         step, eval, Sol2Str(sol)));
